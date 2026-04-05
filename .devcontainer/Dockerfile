@@ -3,7 +3,7 @@ FROM espressif/idf
 ARG DEBIAN_FRONTEND=nointeractive
 ARG CONTAINER_USER=esp
 ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+ARG USER_GID=1000
 
 RUN apt-get update \
   && apt install -y -q \
@@ -35,7 +35,12 @@ RUN wget --no-verbose ${QEMU_URL} \
 
 ENV PATH=/opt/qemu/bin:${PATH}
 
-# ✅ FIX: remove user creation (base image already has esp user)
+# ✅ SAFE USER CREATION (no conflicts)
+RUN set -eux; \
+    if ! id -u $CONTAINER_USER >/dev/null 2>&1; then \
+        useradd -m -u $USER_UID -s /bin/bash $CONTAINER_USER; \
+    fi
+
 RUN chmod -R 775 /opt/esp/python_env/ || true
 
 USER ${CONTAINER_USER}
