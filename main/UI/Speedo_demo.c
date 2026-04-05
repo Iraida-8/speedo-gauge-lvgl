@@ -4,9 +4,9 @@
 #include <stdlib.h>
 
 // Global components
-lv_obj_t *scr; // Screen background
-lv_obj_t *spd_arc; // Speedometer arc
-lv_obj_t *spd_label; // Speedometer label
+lv_obj_t *scr; 
+lv_obj_t *spd_arc; 
+lv_obj_t *spd_label; 
 
 // Color palette
 lv_color_t palette_black = LV_COLOR_MAKE(0, 0, 0);
@@ -15,9 +15,6 @@ lv_color_t palette_red = LV_COLOR_MAKE(255, 0, 0);
 lv_color_t palette_amber= LV_COLOR_MAKE(250, 140, 0);
 lv_color_t palette_yellow = LV_COLOR_MAKE(255, 210, 0);
 
-// Fonts
-LV_FONT_DECLARE(futura_light_24);
-
 // Attributes
 lv_obj_t *canvas;
 static lv_color_t canvas_buf[480 * 480];
@@ -25,30 +22,8 @@ static lv_color_t canvas_buf[480 * 480];
 const int dimension = 480;
 const int spd_max = 300;
 const int spd_min = 0;
-const int km_total = 0;
-const int km_trip = 0;
-const int kmh = 0;
-const int arc_start = 210;
-const int arc_end = -30;
-const int spd_line_width = 4;
-
-
-
-typedef enum {
-    P,
-    R,
-    N,
-    D,
-    G1,
-    G2,
-    G3,
-    G4
-} Gear;
-
-Gear gear = P;
 
 // Draw the tick marks around the speedometer
-
 void draw_ticks(void) {
     int cx = dimension / 2; 
     int cy = dimension / 2;
@@ -89,7 +64,7 @@ void draw_ticks(void) {
             char buf[12];
             sprintf(buf, "%d", v);
 
-            int r_text = 168; 
+            int r_text = 165; // Slightly tighter radius for the larger font
             int tx = cx + (int)(r_text * cosf(rad));
             int ty = cy - (int)(r_text * sinf(rad));
 
@@ -97,51 +72,43 @@ void draw_ticks(void) {
             lv_draw_label_dsc_init(&label_dsc);
             label_dsc.color = palette_black;
             
-            // Swapped to your new custom font
-            //label_dsc.font = &futura_light_24; 
+            /* Using Built-in Montserrat 24. 
+               If your compiler says this is 'undefined', 
+               change it to &lv_font_montserrat_20 
+            */
+            label_dsc.font = &lv_font_montserrat_24; 
             label_dsc.align = LV_TEXT_ALIGN_CENTER;
 
-            // Centering the box (30px offset for a 60px wide box)
+            // Adjusted height (24) to accommodate the larger font size
             lv_canvas_draw_text(canvas, tx - 30, ty - 12, 60, &label_dsc, buf);
         }
     }
 }
 
-// Draw yellow limit block from 50 to 60 km/h
 void draw_speed_limit_marker(lv_obj_t * canvas, int cx, int cy) {
-    // 1. Map 50 and 60 km/h to angles based on your 20-300 scale
     float angle_50 = 225.0f + (50.0f - 20.0f) * (-45.0f - 225.0f) / (300.0f - 20.0f);
     float angle_60 = 225.0f + (60.0f - 20.0f) * (-45.0f - 225.0f) / (300.0f - 20.0f);
 
-    // 2. Setup Draw Descriptor
     lv_draw_arc_dsc_t yellow_dsc;
     lv_draw_arc_dsc_init(&yellow_dsc);
-    
-    // Use your global palette color
     yellow_dsc.color = palette_yellow; 
     yellow_dsc.width = 16; 
 
-    // 3. Draw the Solid Yellow Block
-    // Buffer (1.2f) prevents overlapping the black tick marks for a factory look
     float buffer = 1.2f;
     int start_angle = (int)(360 - angle_50 + buffer);
     int end_angle = (int)(360 - angle_60 - buffer);
     
-    // Radius 234 keeps the marker pushed towards the outer edge
     lv_canvas_draw_arc(canvas, cx, cy, 234, start_angle, end_angle, &yellow_dsc);
 }
 
-// Build the UI
 void Build_UI(void){
     scr = lv_scr_act();    
     lv_obj_set_style_bg_color(scr, palette_white, 0);
 
-    draw_ticks(); // call speedometer tick drawing function
-    draw_speed_limit_marker(canvas, dimension / 2, dimension / 2); // call speed limit marker drawing function
-
+    draw_ticks(); 
+    draw_speed_limit_marker(canvas, dimension / 2, dimension / 2); 
 }
 
-void lvgl_live_preview_init(void)
-{
+void lvgl_live_preview_init(void) {
     Build_UI();
 }
