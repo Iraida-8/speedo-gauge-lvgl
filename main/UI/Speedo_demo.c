@@ -246,3 +246,8 @@ void Build_UI(void){
     update_speed(34);
     update_gear("2");
 }
+
+void lvgl_live_preview_init(void)
+{
+    Build_UI();
+}

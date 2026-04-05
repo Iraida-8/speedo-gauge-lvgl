@@ -9,7 +9,9 @@
                 "${config:idf.espIdfPathWin}/components/**",
                 "${config:idf.espAdfPath}/components/**",
                 "${config:idf.espAdfPathWin}/components/**",
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/root/.vscode-server/data/User/globalStorage/themastercoder007.lvgl-live-preview/lvgl/8.3.0",
+                "/root/.vscode-server/data/User/globalStorage/themastercoder007.lvgl-live-preview/lvgl/8.3.0/src"
             ],
             "browse": {
                 "path": [
