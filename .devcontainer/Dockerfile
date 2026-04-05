@@ -14,6 +14,7 @@ RUN apt-get update \
   libnuma1 \
   libpixman-1-0 \
   linux-tools-virtual \
+  wget \
   && rm -rf /var/lib/apt/lists/*
 
 RUN update-alternatives --install /usr/local/bin/usbip usbip `ls /usr/lib/linux-tools/*/usbip | tail -n1` 20
@@ -34,17 +35,8 @@ RUN wget --no-verbose ${QEMU_URL} \
 
 ENV PATH=/opt/qemu/bin:${PATH}
 
-RUN set -eux; \
-    if ! getent group $USER_GID >/dev/null; then \
-        groupadd --gid $USER_GID $CONTAINER_USER; \
-    fi; \
-    if ! id -u $CONTAINER_USER >/dev/null 2>&1; then \
-        adduser --uid $USER_UID --gid $USER_GID --disabled-password --gecos "" ${CONTAINER_USER}; \
-    fi; \
-    usermod -a -G root $CONTAINER_USER || true; \
-    usermod -a -G dialout $CONTAINER_USER || true
-
-RUN chmod -R 775 /opt/esp/python_env/
+# ✅ FIX: remove user creation (base image already has esp user)
+RUN chmod -R 775 /opt/esp/python_env/ || true
 
 USER ${CONTAINER_USER}
 ENV USER=${CONTAINER_USER}
@@ -53,5 +45,4 @@ WORKDIR /home/${CONTAINER_USER}
 RUN echo "source /opt/esp/idf/export.sh > /dev/null 2>&1" >> ~/.bashrc
 
 ENTRYPOINT [ "/opt/esp/entrypoint.sh" ]
-
-CMD ["/bin/bash", "-c"]
+CMD ["/bin/bash"]
