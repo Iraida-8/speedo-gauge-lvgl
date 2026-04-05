@@ -35,19 +35,12 @@ RUN wget --no-verbose ${QEMU_URL} \
 
 ENV PATH=/opt/qemu/bin:${PATH}
 
-# ✅ SAFE USER CREATION (no conflicts)
-RUN set -eux; \
-    if ! id -u $CONTAINER_USER >/dev/null 2>&1; then \
-        useradd -m -u $USER_UID -s /bin/bash $CONTAINER_USER; \
-    fi
-
 RUN chmod -R 775 /opt/esp/python_env/ || true
 
-USER ${CONTAINER_USER}
-ENV USER=${CONTAINER_USER}
-WORKDIR /home/${CONTAINER_USER}
+USER root
+WORKDIR /workspace
 
-RUN echo "source /opt/esp/idf/export.sh > /dev/null 2>&1" >> ~/.bashrc
+RUN echo "source /opt/esp/idf/export.sh > /dev/null 2>&1" >> /root/.bashrc
 
 ENTRYPOINT [ "/opt/esp/entrypoint.sh" ]
 CMD ["/bin/bash"]
