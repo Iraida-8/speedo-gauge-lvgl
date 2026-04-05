@@ -171,7 +171,7 @@ void draw_odometers(void) {
     lv_obj_set_style_pad_ver(odo_main_label, 1, 0); 
     lv_obj_set_style_pad_hor(odo_main_label, 8, 0); 
     lv_obj_set_style_text_letter_space(odo_main_label, 8, 0);
-    lv_obj_set_style_border_width(odo_main_label, 2, 0);
+    lv_obj_set_style_border_width(odo_main_label, 4, 0);
     lv_obj_set_style_border_color(odo_main_label, palette_grey, 0);
     lv_obj_align(odo_main_label, LV_ALIGN_CENTER, 0, -50);
 
@@ -183,7 +183,7 @@ void draw_odometers(void) {
     lv_obj_set_style_pad_ver(odo_trip_label, 1, 0);
     lv_obj_set_style_pad_hor(odo_trip_label, 5, 0);        
     lv_obj_set_style_text_letter_space(odo_trip_label, 5, 0);
-    lv_obj_set_style_border_width(odo_trip_label, 2, 0);
+    lv_obj_set_style_border_width(odo_trip_label, 5, 0);
     lv_obj_set_style_border_color(odo_trip_label, palette_grey, 0);
     lv_obj_align(odo_trip_label, LV_ALIGN_CENTER, -20, 65); 
 
@@ -196,7 +196,7 @@ void draw_odometers(void) {
     lv_obj_set_style_border_color(odo_tenth_label, palette_black, 0);
     lv_obj_set_style_pad_hor(odo_tenth_label, 8, 0); 
     lv_obj_set_style_pad_ver(odo_tenth_label, 1, 0);
-    lv_obj_align_to(odo_tenth_label, odo_trip_label, LV_ALIGN_OUT_RIGHT_MID, 0, 0);
+    lv_obj_align_to(odo_tenth_label, odo_trip_label, LV_ALIGN_OUT_RIGHT_MID, 15, 0);
 }
 
 void draw_gear_selector(void) {
