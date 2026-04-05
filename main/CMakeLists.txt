@@ -11,6 +11,9 @@ idf_component_register(
                               "SD_Card/SD_SPI.c"
                               "LVGL_UI/LVGL_Example.c"
                               "UI/Speedo_demo.c"
+                              "UI/fonts/futura_light_24.c"
+                              "UI/fonts/futura_medium_24.c"
+                              "UI/images/AMGPMLOGOSML.c"
                               "Wireless/Wireless.c"
                               "Buzzer/Buzzer.c"
 
@@ -26,6 +29,7 @@ idf_component_register(
                                      "./LVGL_UI"
                                      "./UI"
                                      "./UI/fonts"
+                                     "./UI/images"
                                      "./Wireless"
                                      "./Buzzer"
                                      "."
