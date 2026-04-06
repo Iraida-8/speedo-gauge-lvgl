@@ -126,35 +126,45 @@ void draw_background(void) {
     lv_obj_center(canvas);
     lv_canvas_fill_bg(canvas, palette_white, LV_OPA_COVER);
 
+    // Speed Warning Arc (Drawn first so ticks sit on top)
+    float angle_50 = 225.0f + (50.0f - 20.0f) * (-45.0f - 225.0f) / (300.0f - 20.0f);
+    float angle_60 = 225.0f + (60.0f - 20.0f) * (-45.0f - 225.0f) / (300.0f - 20.0f);
+    lv_draw_arc_dsc_t yellow_dsc; lv_draw_arc_dsc_init(&yellow_dsc);
+    yellow_dsc.color = palette_yellow; 
+    yellow_dsc.width = 30; // Increased to match Tach redline
+    lv_canvas_draw_arc(canvas, cx, cy, r_outer - 5, (int)(360 - angle_50 + 2), (int)(360 - angle_60 - 1), &yellow_dsc);
+
     int start_angle = 225; int end_angle = -45;
     for(int v = 20; v <= 300; v += 10) {
         float angle = (float)start_angle + (float)(v - 20) * (float)(end_angle - start_angle) / (300.0f - 20.0f);
         float rad = angle * (3.14159265f / 180.0f);
         int is_major = (v % 20 == 0);
-        int r_inner = is_major ? 200 : 218; 
+        
+        // Match Tach lengths: Major lines are 45px long, Minor are 30px long
+        int r_inner = is_major ? 190 : 205; 
+
         int x1 = cx + (int)(r_outer * cosf(rad)); int y1 = cy - (int)(r_outer * sinf(rad));
         int x2 = cx + (int)(r_inner * cosf(rad)); int y2 = cy - (int)(r_inner * sinf(rad));
 
         lv_draw_line_dsc_t dsc; lv_draw_line_dsc_init(&dsc);
-        dsc.color = palette_black; dsc.width = is_major ? 4 : 2;
+        dsc.color = palette_black; 
+        // Match Tach widths: 8 for major, 5 for minor
+        dsc.width = is_major ? 8 : 5;
+        
         lv_point_t pts[2] = {{x1, y1}, {x2, y2}};
         lv_canvas_draw_line(canvas, pts, 2, &dsc);
 
         if(is_major) {
             char buf[12]; sprintf(buf, "%d", v);
-            int r_text = 180; int tx = cx + (int)(r_text * cosf(rad)); int ty = cy - (int)(r_text * sinf(rad));
+            // Adjusted text radius to clear the longer lines
+            int r_text = 165; 
+            int tx = cx + (int)(r_text * cosf(rad)); int ty = cy - (int)(r_text * sinf(rad));
             lv_draw_label_dsc_t label_dsc; lv_draw_label_dsc_init(&label_dsc);
             label_dsc.color = palette_black; label_dsc.font = &futura_medium_24; 
             label_dsc.align = LV_TEXT_ALIGN_CENTER;
             lv_canvas_draw_text(canvas, tx - 30, ty - 12, 60, &label_dsc, buf);
         }
     }
-    // Speed Warning Arc
-    float angle_50 = 225.0f + (50.0f - 20.0f) * (-45.0f - 225.0f) / (300.0f - 20.0f);
-    float angle_60 = 225.0f + (60.0f - 20.0f) * (-45.0f - 225.0f) / (300.0f - 20.0f);
-    lv_draw_arc_dsc_t yellow_dsc; lv_draw_arc_dsc_init(&yellow_dsc);
-    yellow_dsc.color = palette_yellow; yellow_dsc.width = 16; 
-    lv_canvas_draw_arc(canvas, cx, cy, 234, (int)(360 - angle_50 + 2), (int)(360 - angle_60 - 1), &yellow_dsc);
 }
 
 void draw_odometers(void) {
