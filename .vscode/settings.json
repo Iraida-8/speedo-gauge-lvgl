@@ -56,5 +56,6 @@
     "cstdlib": "c",
     "montserrat_bold_28.h": "c"
   },
-  "idf.flashType": "UART"
+  "idf.flashType": "UART",
+  "C_Cpp.errorSquiggles": "disabled"
 }
